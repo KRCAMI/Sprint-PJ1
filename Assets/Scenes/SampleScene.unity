@@ -564,6 +564,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   speed: 10
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!54 &793022753
 Rigidbody:
   m_ObjectHideFlags: 0
