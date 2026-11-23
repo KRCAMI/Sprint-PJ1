@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
@@ -38,7 +39,8 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+        Vector3 targetVelocity = movement * speed;
+        rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
         rb.MoveRotation(targetRotation);
     }
 }
