@@ -1,36 +1,47 @@
-using NUnit.Framework.Constraints;
 using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    public float speed = 10f;
-    Rigidbody rb;
-    Vector3 movement;
-    public LayerMask groundLayer;
-    Quaternion targetRotation = Quaternion.identity;
-    void Start()
+    private Camera mainCamera;
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float rayDistance = 100f;
+    [SerializeField] private LayerMask groundLayer;
+    private Rigidbody rb;
+    private Vector3 movement;
+    private Quaternion targetRotation = Quaternion.identity;
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         targetRotation = rb.rotation;
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
     }
-
-    
-    void Update()
+    void Start()
     {
 
+    }
+    void Update()
+    {
         AimTowardMouse();
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
         movement = new Vector3(x, 0f, z).normalized;
     }
+   
     void AimTowardMouse()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayer))
+        if (mainCamera == null)
         {
-            Vector3 lookDir = hit.point - rb.position;
+            return;
+        }
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance, groundLayer))
+        {
+            Vector3 lookDir = hit.point - transform.position;
             lookDir.y = 0f;
-            if(lookDir.sqrMagnitude > 0f)
+            if(lookDir.sqrMagnitude > 0.01f)
             {
                 targetRotation = Quaternion.LookRotation(lookDir);
             }
